@@ -49,7 +49,7 @@ public class Shell {
      * method used to connect to the host.
      * @throws JSchException Caused by JSch
      */
-    public void connect() throws JSchException {
+    public String connect() throws JSchException {
         jSch = new JSch();
         session = jSch.getSession(username, host, port);
         session.setPassword(password);
@@ -59,15 +59,15 @@ public class Shell {
         session.setConfig(config);
         session.setTimeout(2000);
         session.connect();
-        System.out.println("Connection successfully established.");
+        return "Connection successfully established.";
     }
 
     /**
      * The method used to disconnect from the server.
      */
-    public void disconnect() {
+    public String disconnect() {
         session.disconnect();
-        System.out.println("Disconnected from the host.");
+        return "Disconnected from the host.";
     }
 
     /**
@@ -121,5 +121,33 @@ public class Shell {
             }
             channel.disconnect();
         }
+    }
+
+    public String execAndReadLine(String cmd) throws JSchException {
+        String line = null;
+        BufferedReader reader = null;
+        Channel channel = null;
+        try {
+            if (cmd != null) {
+                channel = session.openChannel("exec");
+                ((ChannelExec)channel).setCommand(cmd);
+                channel.connect();
+
+                InputStream in = channel.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(in));
+
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                reader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            channel.disconnect();
+        }
+        return line;
     }
 }
