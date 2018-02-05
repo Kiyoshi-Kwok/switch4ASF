@@ -48,7 +48,7 @@ public class Operate {
             return e.getLocalizedMessage();
         }
 
-        return "Service was successfully turned on.";
+        return "Service is successfully turned on.";
     }
 
     public String off() {
@@ -69,7 +69,7 @@ public class Operate {
             return e.getLocalizedMessage();
         }
 
-        return "Service was shut down.";
+        return "Service has shut down.";
     }
 
     public String process(String input) {

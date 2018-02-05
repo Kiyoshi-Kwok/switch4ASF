@@ -35,6 +35,7 @@ public class GUI extends JFrame {
         infoContainer = new JScrollPane(info);
 
         container.setLayout(new BorderLayout());
+        info.setEditable(false);
         switches.add(on);
         switches.add(check);
         switches.add(off);
