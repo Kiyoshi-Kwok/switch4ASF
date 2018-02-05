@@ -8,8 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-
-
 public class Shell {
     private String host;
     private String username;
@@ -20,6 +18,12 @@ public class Shell {
     private Session session;
 
 
+    /**
+     *
+     * @param host IP Address of the host.
+     * @param username The username used to login.
+     * @param password The password of the user.
+     */
     public Shell(String host, String username, String password) {
         this.host = host;
         this.username = username;
@@ -27,6 +31,13 @@ public class Shell {
         this.port = DEFAULT_SSH_PORT;
     }
 
+    /**
+     *
+     * @param host IP Address of the host.
+     * @param username The username used to login.
+     * @param password The password of the user.
+     * @param port The port to connect.
+     */
     public Shell(String host, String username, String password, int port) {
         this.host = host;
         this.username = username;
@@ -34,6 +45,10 @@ public class Shell {
         this.host = host;
     }
 
+    /**
+     * method used to connect to the host.
+     * @throws JSchException Caused by JSch.
+     */
     public void connect() throws JSchException {
         jSch = new JSch();
         session = jSch.getSession(username, host, port);
@@ -46,10 +61,18 @@ public class Shell {
         session.connect();
     }
 
+    /**
+     * The method used to disconnect from the server.
+     */
     public void disconnect() {
         session.disconnect();
     }
 
+    /**
+     *
+     * @param cmd The command that you wanna execute on remote host.
+     * @throws JSchException Caused by JSch.
+     */
     public void execCmd(String cmd) throws JSchException {
         BufferedReader reader = null;
         Channel channel = null;
@@ -77,9 +100,5 @@ public class Shell {
             }
             channel.disconnect();
         }
-    }
-
-    public static void main(String[] args) {
-
     }
 }

@@ -26,3 +26,6 @@ hs_err_pid*
 
 # Auto-created .bak files
 *.bak
+
+# Test Main Class
+Main.java
