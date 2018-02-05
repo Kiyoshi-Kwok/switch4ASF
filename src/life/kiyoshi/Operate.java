@@ -15,14 +15,34 @@ public class Operate {
         this.password = password;
     }
 
-    public String on() {
-        String cmd1 = "cd";
-        String cmd2 = "bash Scripts/ASFOn.sh";
+    public String check() {
+        String cmd = "ps -A | grep ArchiSteamFarm";
         Shell shell = new Shell(host, username, password);
         try {
             shell.connect();
-            shell.execCmd(cmd1);
+            String key = shell.execAndReadLine(cmd);
+            shell.disconnect();
+            if (null == key)
+                return "ASF is not running on the host.";
+            else
+                return "ASF is running on the host.";
+        } catch (Exception e) {
+            return e.getLocalizedMessage();
+        }
+    }
+
+    public String on() {
+        String cmd1 = "ps -A | grep ArchiSteamFarm";
+        String cmd2 = "cd";
+        String cmd3 = "bash Scripts/ASFOn.sh";
+        Shell shell = new Shell(host, username, password);
+        try {
+            shell.connect();
+            String key = shell.execAndReadLine(cmd1);
+            if (null != key)
+                return "There is an ASF running on the host!";
             shell.execCmd(cmd2);
+            shell.execCmd(cmd3);
             shell.disconnect();
         } catch (Exception e) {
             return e.getLocalizedMessage();
@@ -40,7 +60,7 @@ public class Operate {
             shell.connect();
             rawInput = shell.execAndReadLine(cmd1);
             if (rawInput == null)
-                return "There is no ASF running on host!";
+                return "There is no ASF running on the host!";
             int PID = Integer.parseInt(process(rawInput));
             cmd2.append(PID);
             shell.execCmd(cmd2.toString());

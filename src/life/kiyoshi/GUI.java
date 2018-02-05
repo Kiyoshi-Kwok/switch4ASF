@@ -16,22 +16,29 @@ public class GUI extends JFrame {
     private Container container;
     private JButton on;
     private JButton off;
+    private JButton check;
     private JPanel switches;
     private JScrollPane infoContainer;
     private JTextArea info;
+    private JLabel label;
 
     public GUI(Operate operate) {
         container = getContentPane();
         switches = new JPanel(new FlowLayout());
-        on = new JButton("ON");
-        off = new JButton("OFF");
+        on = new JButton("On");
+        off = new JButton("Off");
+        check = new JButton("Check");
+        label = new JLabel("Click check first.", SwingConstants.CENTER);
+
         info = new JTextArea(8,30);
         infoContainer = new JScrollPane(info);
 
         container.setLayout(new BorderLayout());
         switches.add(on);
+        switches.add(check);
         switches.add(off);
-        container.add(switches, BorderLayout.NORTH);
+        container.add(label, BorderLayout.NORTH);
+        container.add(switches, BorderLayout.CENTER);
         container.add(infoContainer, BorderLayout.SOUTH);
 
         setTitle("ASF Switch");
@@ -50,6 +57,13 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 append(operate.off());
+            }
+        });
+
+        check.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                append(operate.check());
             }
         });
     }
