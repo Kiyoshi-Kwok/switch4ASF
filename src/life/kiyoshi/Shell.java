@@ -47,7 +47,7 @@ public class Shell {
 
     /**
      * method used to connect to the host.
-     * @throws JSchException Caused by JSch.
+     * @throws JSchException Caused by JSch
      */
     public void connect() throws JSchException {
         jSch = new JSch();
@@ -59,6 +59,7 @@ public class Shell {
         session.setConfig(config);
         session.setTimeout(2000);
         session.connect();
+        System.out.println("Connection successfully established.");
     }
 
     /**
@@ -66,14 +67,34 @@ public class Shell {
      */
     public void disconnect() {
         session.disconnect();
+        System.out.println("Disconnected from the host.");
     }
 
     /**
      *
-     * @param cmd The command that you wanna execute on remote host.
+     * @param cmd The command that you wanna execute.
      * @throws JSchException Caused by JSch.
      */
     public void execCmd(String cmd) throws JSchException {
+        try {
+            Channel channel;
+            if (cmd != null) {
+                channel = session.openChannel("exec");
+                ((ChannelExec) channel).setCommand(cmd);
+                channel.connect();
+                channel.disconnect();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param cmd The command that you wanna execute.
+     * @throws JSchException Caused by JSch.
+     */
+    public void execCmdWithOutput(String cmd) throws JSchException {
         BufferedReader reader = null;
         Channel channel = null;
         try {
