@@ -31,7 +31,7 @@ public class GUI extends JFrame {
         label = new JLabel("Click check first.", SwingConstants.CENTER);
 
         setLocationRelativeTo(null);
-        info = new JTextArea(8,30);
+        info = new JTextArea(9,32);
         infoContainer = new JScrollPane(info);
 
         container.setLayout(new BorderLayout());
@@ -43,6 +43,7 @@ public class GUI extends JFrame {
         container.add(switches, BorderLayout.CENTER);
         container.add(infoContainer, BorderLayout.SOUTH);
 
+        setResizable(false);
         setTitle("ASF Switch");
         pack();
         setVisible(true);
