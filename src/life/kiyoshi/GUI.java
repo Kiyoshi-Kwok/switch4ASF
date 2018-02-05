@@ -30,6 +30,7 @@ public class GUI extends JFrame {
         check = new JButton("Check");
         label = new JLabel("Click check first.", SwingConstants.CENTER);
 
+        setLocationRelativeTo(null);
         info = new JTextArea(8,30);
         infoContainer = new JScrollPane(info);
 
