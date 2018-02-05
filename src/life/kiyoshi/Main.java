@@ -9,10 +9,6 @@ import java.net.Socket;
 public class Main {
 
     public static void main(String[] args) {
-        //some essential variables
-        String ipAdress = "192.168.0.102";
-        String user = "pi";
-        String path = "C:/.ssh/rpi2.key";
 
         //init the socket
         try {
