@@ -2,17 +2,15 @@ package life.kiyoshi;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * @author : Kiyoshi
- * A GUI to run shell.
+ * @version : 1.0
  */
-public class GUI extends JFrame {
+class GUI extends JFrame {
     private Container container;
     private JButton on;
     private JButton off;
@@ -22,7 +20,11 @@ public class GUI extends JFrame {
     private JTextArea info;
     private JLabel label;
 
-    public GUI(Operate operate) {
+    /**
+     *
+     * @param operate Needs an operate instance to do operations.
+     */
+    GUI(Operate operate) {
         container = getContentPane();
         switches = new JPanel(new FlowLayout());
         on = new JButton("On");
@@ -49,29 +51,18 @@ public class GUI extends JFrame {
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        on.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {;
-                append(operate.on());
-            }
-        });
+        on.addActionListener((e) -> append(operate.on()));
 
-        off.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                append(operate.off());
-            }
-        });
+        off.addActionListener((e) ->  append(operate.off()));
 
-        check.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                append(operate.check());
-            }
-        });
+        check.addActionListener((e) -> append(operate.check()));
     }
 
-    public void append(String line) {
+    /**
+     *
+     * @param line Used to append lines on text area.
+     */
+    private void append(String line) {
         Date d = new Date();
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         info.append(sdf.format(d));

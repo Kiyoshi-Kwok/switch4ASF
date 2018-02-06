@@ -1,56 +1,87 @@
 package life.kiyoshi;
 
 /**
- * @Author: Kiyoshi
- * @Description:
+ * @author : Kiyoshi
+ * @version : 1.0
  */
 public class Operate {
     private String host;
     private String username;
     private String password;
 
-    public Operate(String host, String username, String password) {
+    /**
+     *
+     * @param host IP Address of the host.
+     * @param username The username used to login.
+     * @param password The password of the user.
+     */
+    Operate(String host, String username, String password) {
         this.host = host;
         this.username = username;
         this.password = password;
     }
 
-    public String check() {
+    /**
+     *
+     * @param shell Shell that is currently running.
+     * @return If ASF is running on remote host.
+     */
+    private boolean isRunning(Shell shell) {
         String cmd = "ps -A | grep ArchiSteamFarm";
+        try {
+            String key = shell.execAndReadLine(cmd);
+            return (null != key);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @return Nice sentences.
+     */
+    public String check() {
         Shell shell = new Shell(host, username, password);
         try {
             shell.connect();
-            String key = shell.execAndReadLine(cmd);
-            shell.disconnect();
-            if (null == key)
-                return "ASF is not running on the host.";
-            else
+            if (isRunning(shell)) {
+                shell.disconnect();
                 return "ASF is running on the host.";
+            }
+            shell.disconnect();
+            return "ASF is not running on the host.";
         } catch (Exception e) {
+            shell.disconnect();
             return e.getLocalizedMessage();
         }
     }
 
+    /**
+     *
+     * @return Nice sentences.
+     */
     public String on() {
-        String cmd1 = "ps -A | grep ArchiSteamFarm";
-        String cmd2 = "cd";
-        String cmd3 = "bash Scripts/ASFOn.sh";
+        String cmd1 = "cd";
+        String cmd2 = "bash Scripts/ASFOn.sh";
         Shell shell = new Shell(host, username, password);
         try {
             shell.connect();
-            String key = shell.execAndReadLine(cmd1);
-            if (null != key)
-                return "There is an ASF running on the host!";
+            if (isRunning(shell)) return "There is an ASF running on the host!";
+            shell.execCmd(cmd1);
             shell.execCmd(cmd2);
-            shell.execCmd(cmd3);
             shell.disconnect();
         } catch (Exception e) {
+            shell.disconnect();
             return e.getLocalizedMessage();
         }
 
         return "Service has been successfully turned on.";
     }
 
+    /**
+     *
+     * @return Nice sentences.
+     */
     public String off() {
         Shell shell = new Shell(host, username, password);
         String cmd1 = "ps -A | grep ArchiSteamFarm";
@@ -59,28 +90,30 @@ public class Operate {
         try {
             shell.connect();
             rawInput = shell.execAndReadLine(cmd1);
-            if (rawInput == null)
-                return "There is no ASF running on the host!";
+            if (null == rawInput) return "There is no ASF running on the host!";
             int PID = Integer.parseInt(process(rawInput));
             cmd2.append(PID);
             shell.execCmd(cmd2.toString());
             shell.disconnect();
         } catch (Exception e) {
+            shell.disconnect();
             return e.getLocalizedMessage();
         }
-
         return "Service has been shut down.";
     }
 
-    public String process(String input) {
+    /**
+     *
+     * @param input The raw ps -A | grep ArchiSteamFarm output.
+     * @return PID of ASF that is running on remote host.
+     */
+    private String process(String input) {
         char[] line = input.toCharArray();
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (int i = 0; i < line.length; i ++) {
-            if (Character.isSpaceChar(line[i]))
-                continue;
-            else if (Character.isDigit(line[i]))
-                stringBuilder.append(line[i]);
+        for (char i : line) {
+            if (Character.isSpaceChar(i)) continue;
+            else if (Character.isDigit(i)) stringBuilder.append(i);
             else break;
         }
         return stringBuilder.toString();

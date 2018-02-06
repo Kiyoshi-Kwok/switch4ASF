@@ -8,6 +8,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
+/**
+ * @author : Kiyoshi
+ * @version : 1.0
+ */
 public class Shell {
     private String host;
     private String username;
@@ -17,14 +21,13 @@ public class Shell {
     private JSch jSch;
     private Session session;
 
-
     /**
      *
      * @param host IP Address of the host.
      * @param username The username used to login.
      * @param password The password of the user.
      */
-    public Shell(String host, String username, String password) {
+    Shell(String host, String username, String password) {
         this.host = host;
         this.username = username;
         this.password = password;
@@ -49,7 +52,7 @@ public class Shell {
      * method used to connect to the host.
      * @throws JSchException Caused by JSch
      */
-    public String connect() throws JSchException {
+    public void connect() throws JSchException {
         jSch = new JSch();
         session = jSch.getSession(username, host, port);
         session.setPassword(password);
@@ -59,15 +62,13 @@ public class Shell {
         session.setConfig(config);
         session.setTimeout(2000);
         session.connect();
-        return "Connection successfully established.";
     }
 
     /**
      * The method used to disconnect from the server.
      */
-    public String disconnect() {
+    public void disconnect() {
         session.disconnect();
-        return "Disconnected from the host.";
     }
 
     /**
@@ -75,7 +76,7 @@ public class Shell {
      * @param cmd The command that you wanna execute.
      * @throws JSchException Caused by JSch.
      */
-    public void execCmd(String cmd) throws JSchException {
+    public void execCmd(String cmd) {
         try {
             Channel channel;
             if (cmd != null) {
@@ -84,7 +85,7 @@ public class Shell {
                 channel.connect();
                 channel.disconnect();
             }
-        } catch (Exception e) {
+        } catch (JSchException e) {
             e.printStackTrace();
         }
     }
@@ -116,13 +117,19 @@ public class Shell {
         } finally {
             try {
                 reader.close();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             channel.disconnect();
         }
     }
 
+    /**
+     *
+     * @param cmd The command line you wanna execute.
+     * @return The first line after executing the command.
+     * @throws JSchException Caused by JSch.
+     */
     public String execAndReadLine(String cmd) throws JSchException {
         String line = null;
         BufferedReader reader = null;
